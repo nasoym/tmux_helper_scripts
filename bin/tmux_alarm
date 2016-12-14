@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function cleanup(){
+  tmuxstatuscolor blue
+  echo
+  exit 0
+}
+trap cleanup SIGTERM SIGINT SIGHUP EXIT
+
+: ${ALARM_COLOR:="red"}
+if [ "$#" -ge 1 ]; then
+  ALARM_COLOR=$1
+fi
+
+TIMEOUT="0.15"
+while true
+do
+  tmuxstatuscolor $ALARM_COLOR
+  sleep $TIMEOUT
+  tmuxstatuscolor blue
+  sleep $TIMEOUT
+done

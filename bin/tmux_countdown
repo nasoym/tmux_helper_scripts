@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function cleanup(){
+  tmuxstatuscolor blue
+  tput sgr0
+  echo
+  rm -f ~/.tmux_message
+  exit 0
+}
+trap cleanup SIGTERM SIGINT SIGHUP EXIT
+
+
+if [ "$#" -gt 0 ]
+then
+
+  DURATION=$1
+  START=$(date +%s)
+  while true
+  do
+    NOW=$(date +%s)
+    SECONDS_SINCE_START=$(( NOW - START ))
+    PERCENTAGE=$(echo "scale=0; 100 * $SECONDS_SINCE_START / $DURATION " | bc -l)
+
+    if [ $PERCENTAGE -ge 150 ]
+    then
+      break
+    elif [ $PERCENTAGE -ge 110 ]
+    then
+      tmuxstatuscolor red
+    elif [ $PERCENTAGE -ge 105 ]
+    then
+      tmuxstatuscolor magenta
+    elif [ $PERCENTAGE -ge 100 ]
+    then
+      tmuxstatuscolor yellow
+    fi
+    sleep 1
+    echo "$PERCENTAGE" > ~/.tmux_message
+  done
+
+fi
+

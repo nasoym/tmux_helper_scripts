@@ -1,0 +1,5 @@
+#!/bin/bash
+if [ "$#" -gt 0 ]; then
+  tmux set-window-option -g status-bg $1
+  tmux set-window-option -g window-status-bg $1
+fi
